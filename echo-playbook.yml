@@ -1,0 +1,5 @@
+---
+
+- name: echo hostname
+  ansible.builtin.command: echo $HOSTNAME
+

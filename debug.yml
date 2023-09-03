@@ -1,0 +1,8 @@
+---
+
+- hosts: test-servers
+  #gather_facts: no
+  tasks:
+    - name: Basic usage
+      debug: var=ansible_facts.hostname
+              #msg: "'{{ lookup('env', 'HOME') }}'"

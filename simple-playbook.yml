@@ -1,0 +1,61 @@
+---
+
+- hosts: test-servers
+  become: yes
+  tasks:
+    - name: be sure apache2 is installed
+      apt: name=apache2 state=installed
+
+    - name: be sure apache2 is running and enabled
+      service: name=apache2 state=started enabled=yes
+
+    - name: be sure redis is installed
+      apt: name=redis state=installed
+
+    - name: be sure redis is running and enabled
+      service: name=redis state=started enabled=yes
+
+    - name: hostname
+      command: hostnamectl
+      register: out
+
+    - debug: 
+          var: out.stdout_lines
+
+    - name: date
+      command: date
+      register: date
+
+    - debug: 
+          var: date.stdout_lines
+
+    - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+      user:
+        name: johnd
+        comment: John Doe
+        uid: 1040
+
+    - name: Git clone setup-tool
+      become: yes
+      become_user: vagrant
+      git:
+        repo: 'https://github.com/niciyan/setup-tool.git'
+        dest: /home/vagrant/setup-tool
+
+    - name: Testing fact
+      become: no
+      become_user: vagrant
+      shell: echo {{ ansible_facts['hostname'] }}
+      register: out
+
+    - debug: 
+          var: out.stdout_lines
+
+        #     - name: hostname
+        #       become: yes
+        #       become_user: vagrant
+        #       shell: bash /home/vagrant/setup-tool/run.sh
+        #       register: out
+        # 
+        #     - debug: 
+        #           var: out.stdout_lines
