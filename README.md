@@ -11,6 +11,6 @@ First, define the remote host in hosts:
 	ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 
 
-execute ansible:
+execute ansible like below:
 
 	ansible-playbook -i hosts simple-playbook.yml
