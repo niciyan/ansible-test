@@ -1,0 +1,16 @@
+- name: check vimrc exists
+  ansible.builtin.stat:
+    path: "{{ansible_user_dir}}/.vimrc"
+  register: vimrc
+
+- name: Git clone setup-tool
+  git:
+    repo: 'https://github.com/niciyan/minimal-vimrc.git'
+    dest: "{{ansible_user_dir}}/minimal-vimrc"
+  when: vimrc.stat.exists == False
+
+- name: minimal-vimrc execution
+  shell: "bash {{ansible_user_dir}}/minimal-vimrc/install.sh"
+  when: vimrc.stat.exists == False 
+  # register: out
+

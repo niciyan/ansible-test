@@ -1,8 +1,37 @@
 ---
 
-- hosts: test-servers
+- hosts: all
   #gather_facts: no
+  #become: yes
   tasks:
     - name: Basic usage
-      debug: var=ansible_facts.hostname
-              #msg: "'{{ lookup('env', 'HOME') }}'"
+      command: id 
+      register: out
+      become: no
+
+    - debug: 
+          var: out.stdout_lines
+    - debug: 
+          var: ansible_ssh_user
+
+    # - name: hostname
+    #   command: hostnamectl
+    #   register: out
+
+    # - debug: 
+    #       var: out.stdout_lines
+
+    # - name: date
+    #   command: date
+    #   register: date
+
+    # - debug: 
+    #       var: date.stdout_lines
+
+
+    # - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+    #   user:
+    #     name: johnd
+    #     comment: John Doe
+    #     uid: 1040
+

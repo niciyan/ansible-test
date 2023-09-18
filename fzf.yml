@@ -1,0 +1,9 @@
+- name: fzf clone
+  git:
+    repo: 'https://github.com/junegunn/fzf.git'
+    dest: "{{ansible_env.HOME}}/.fzf"
+    depth: 1
+
+- name: fzf install
+  shell: "{{ansible_env.HOME}}/.fzf/install --all"
+

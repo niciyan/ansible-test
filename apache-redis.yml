@@ -1,0 +1,16 @@
+- name: be sure apache2 is installed
+  apt: name=apache2 state=present
+  become: yes
+
+- name: be sure apache2 is running and enabled
+  service: name=apache2 state=started enabled=yes
+  become: yes
+
+- name: be sure redis is installed
+  apt: name=redis state=present
+  become: yes
+
+- name: be sure redis is running and enabled
+  service: name=redis state=started enabled=yes
+  become: yes
+

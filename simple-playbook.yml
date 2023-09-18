@@ -1,61 +1,32 @@
 ---
 
-- hosts: test-servers
-  become: yes
+- hosts: all
+  become: no
   tasks:
-    - name: be sure apache2 is installed
-      apt: name=apache2 state=installed
+    - name: Include timezone
+      ansible.builtin.include: timezone.yml
 
-    - name: be sure apache2 is running and enabled
-      service: name=apache2 state=started enabled=yes
+    - name: Include minimal-vimrc
+      ansible.builtin.include: minimal-vimrc.yml
 
-    - name: be sure redis is installed
-      apt: name=redis state=installed
+    - name: Include apache and redis
+      ansible.builtin.include: apache-redis.yml
 
-    - name: be sure redis is running and enabled
-      service: name=redis state=started enabled=yes
+    - name: fzf
+      ansible.builtin.include: fzf.yml
 
-    - name: hostname
-      command: hostnamectl
-      register: out
+    - name: git-prompt
+      ansible.builtin.include: git-prompt.yml
 
-    - debug: 
-          var: out.stdout_lines
+    # - name: Testing fact
+    #   become: no
+    #   become_user: vagrant
+    #   shell: echo {{ ansible_facts['hostname'] }}
+    #   register: out
 
-    - name: date
-      command: date
-      register: date
+    # - debug: 
+    #       var: out.stdout_lines
 
-    - debug: 
-          var: date.stdout_lines
+    # - debug: 
+    #       var: ansible_user_dir
 
-    - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
-      user:
-        name: johnd
-        comment: John Doe
-        uid: 1040
-
-    - name: Git clone setup-tool
-      become: yes
-      become_user: vagrant
-      git:
-        repo: 'https://github.com/niciyan/setup-tool.git'
-        dest: /home/vagrant/setup-tool
-
-    - name: Testing fact
-      become: no
-      become_user: vagrant
-      shell: echo {{ ansible_facts['hostname'] }}
-      register: out
-
-    - debug: 
-          var: out.stdout_lines
-
-        #     - name: hostname
-        #       become: yes
-        #       become_user: vagrant
-        #       shell: bash /home/vagrant/setup-tool/run.sh
-        #       register: out
-        # 
-        #     - debug: 
-        #           var: out.stdout_lines

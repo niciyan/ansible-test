@@ -1,0 +1,24 @@
+- name: be sure language-pack-ja is installed
+  apt: name=language-pack-ja state=present
+  become: yes
+
+- name: Set timezone to Asia/Tokyo
+  community.general.timezone:
+    name: Asia/Tokyo
+  become: true
+
+- name: Ensure a locale exists
+  community.general.locale_gen:
+    name: ja_JP.UTF-8
+    state: present
+
+- name: システムロケールの確認
+  command: localectl status
+  register: localectl_result
+  check_mode: no
+  changed_when: false
+
+- name: ロケールの変更
+  command: localectl set-locale LANG=ja_JP.utf8
+  when: "'LANG=ja_JP.utf8' not in localectl_result.stdout"
+  become: yes
