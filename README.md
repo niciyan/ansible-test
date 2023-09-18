@@ -48,7 +48,7 @@ Check the new version:
 	  executable location = /usr/bin/ansible
 	  python version = 2.7.15+ (default, Nov 27 2018, 23:36:35) [GCC 7.3.0]
 
-Then, you can use `ansible-galaxy`:
+You can use `ansible-galaxy` as well:
 
 	vagrant@master:~/ansible-test$ ansible-galaxy collection install community.general
 	Process install dependency map
