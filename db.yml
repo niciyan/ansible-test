@@ -1,0 +1,37 @@
+---
+
+- hosts: all
+  become: no
+  vars_files:
+    - "vars/external_vars.yml"
+  tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes
+
+    - name: Include timezone
+      ansible.builtin.include: timezone.yml
+
+    - name: git-prompt
+      ansible.builtin.include: git-prompt.yml
+
+    - name: Include template
+      ansible.builtin.include: test-template.yml
+
+    - name: Include mariadb
+      ansible.builtin.include: mariadb.yml
+
+
+    # - name: Testing fact
+    #   become: no
+    #   become_user: vagrant
+    #   shell: echo {{ ansible_facts['hostname'] }}
+    #   register: out
+
+    # - debug: 
+    #       var: out.stdout_lines
+
+    # - debug: 
+    #       var: ansible_user_dir
+
