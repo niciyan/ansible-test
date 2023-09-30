@@ -2,7 +2,14 @@
 
 - hosts: all
   become: no
+  vars_files:
+    - "vars/external_vars.yml"
   tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes
+
     - name: Include timezone
       ansible.builtin.include: timezone.yml
 
@@ -17,6 +24,10 @@
 
     - name: git-prompt
       ansible.builtin.include: git-prompt.yml
+
+    - name: Include template
+      ansible.builtin.include: test-template.yml
+
 
     # - name: Testing fact
     #   become: no

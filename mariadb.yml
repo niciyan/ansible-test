@@ -1,0 +1,35 @@
+- name: mariadb-server install
+  apt: name=mariadb-server state=present
+  become: yes
+
+- name: mariadb start and enable 
+  service: name=mariadb state=started enabled=yes
+  become: yes
+
+
+- name: mariadb create database
+  shell:
+    cmd: sudo mysql -u root -e 'create database if not exists wordpress ;'
+
+- name: mariadb check user
+  shell:
+    cmd: sudo mysql -u root -e 'select user, host from mysql.user where user = "nishi";'
+  register: user_out
+
+- name: mariadb create user 
+  shell:
+    cmd: |
+      sudo mysql -u root << EOF
+      create user 'nishi'@'localhost' identified by 'nishi';
+      grant all on wordpress.* to 'nishi'@'localhost';
+      show grants for 'nishi'@'localhost';
+      EOF
+  when: not "nishi" in user_out.stdout
+
+- name: mariadb show database
+  shell:
+    cmd: sudo mysql -u root -e 'show databases;'
+  register: out
+    
+- debug: 
+      var: out.stdout_lines
