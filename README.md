@@ -71,3 +71,9 @@ And you run:
 
 	ansible-playbook -i gcp-host dev.yml
 
+# Run on local machine
+
+Run:
+
+	ansible-playbook -c local -i 127.0.0.1 simple-playbook.yml
+
