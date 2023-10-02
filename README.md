@@ -55,3 +55,19 @@ You can use `ansible-galaxy` as well:
 	Starting collection install process
 	Installing 'community.general:7.4.0' to '/home/vagrant/.ansible/collections/ansible_collections/community/general'
 
+# Development Environment Setup
+
+First, you need to setup host file:
+
+	[test-servers]
+	xx.xxx.xx.xx
+
+	[all:vars]
+	ansible_ssh_user=ssh_username
+	ansible_ssh_private_key_file=ssh_privkey_filepath
+	ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ControlMaster=no -o ControlPersist=no'
+
+And you run:
+
+	ansible-playbook -i gcp-host dev.yml
+
