@@ -1,0 +1,55 @@
+---
+
+- hosts: all
+  become: no
+  tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes
+
+    - name: Include timezone
+      ansible.builtin.include: timezone.yml
+
+    - name: Include minimal-vimrc
+      ansible.builtin.include: minimal-vimrc.yml
+
+    - name: Include fzf
+      ansible.builtin.include: fzf.yml
+
+    - name: git-prompt
+      ansible.builtin.include: git-prompt.yml
+
+    - name: unzip install
+      apt: name=unzip state=present
+      become: yes
+
+    - name: check title-html command is available
+      shell: "which title-html"
+      ignore_errors: yes
+      register: out
+
+    - name: title-html download
+      become: yes
+      shell:
+        cmd: |
+          cd /tmp
+          wget https://github.com/niciyan/title-html/releases/download/0.1/title-html_linux_amd64.zip
+          unzip title-html_linux_amd64.zip
+          chmod +x title-html
+          mv title-html /usr/local/bin
+      when: out.rc > 0
+
+
+    # - name: Testing fact
+    #   become: no
+    #   become_user: vagrant
+    #   shell: echo {{ ansible_facts['hostname'] }}
+    #   register: out
+
+    # - debug: 
+    #       var: out.stdout_lines
+
+    # - debug: 
+    #       var: ansible_user_dir
+
