@@ -75,5 +75,5 @@ And you run:
 
 Run:
 
-	ansible-playbook -c local -i 127.0.0.1 simple-playbook.yml
+	ansible-playbook -c local -i localhost simple-playbook.yml
 
