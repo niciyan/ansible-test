@@ -40,6 +40,21 @@
           mv title-html /usr/local/bin
       when: out.rc > 0
 
+    - name: check lf command is available
+      shell: "which lf"
+      ignore_errors: yes
+      register: out
+
+    - name: lf download
+      become: yes
+      shell:
+        cmd: |
+          cd /tmp
+          wget https://github.com/gokcehan/lf/releases/download/r31/lf-linux-amd64.tar.gz
+          tar -xf lf-linux-amd64.tar.gz
+          mv lf /usr/local/bin
+      when: out.rc > 0
+
 
     # - name: Testing fact
     #   become: no
