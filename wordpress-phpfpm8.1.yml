@@ -1,0 +1,60 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes
+
+    - name: be sure nginx is installed
+      apt: name=nginx state=present
+      become: yes
+
+    - name: be sure nginx is running and enabled
+      service: name=nginx state=started enabled=yes
+      become: yes
+
+    - name: create nginx config
+      become: yes
+      ansible.builtin.template:
+        src: nginx-phpfpm8.1-conf-default
+        dest: /etc/nginx/sites-available/default
+
+    - name: reload nginx
+      become: yes
+      service: name=nginx state=reloaded
+
+    - name: Include php-fpm
+      ansible.builtin.include: php8.1.yml
+
+    - name: Include mariadb
+      ansible.builtin.include: mariadb.yml
+
+    - name: check wordpress exists
+      become: yes
+      ignore_errors: true
+      command: "cat /var/www/wordpress/index.php"
+      register: out
+
+    - name: wordpress install 
+      become: yes
+      shell:
+        cmd: |
+          mkdir /tmp/wordpress-install
+          cd /tmp/wordpress-install
+          wget https://ja.wordpress.org/latest-ja.tar.gz
+          tar -xf latest-ja.tar.gz
+          mv wordpress/* /var/www/wordpress
+          rm -rf /tmp/wordpress-install
+      when: out.rc != 0
+
+    - name: Recursively change ownership of a directory
+      become: yes
+      ansible.builtin.file:
+        path: /var/www/wordpress
+        state: directory
+        recurse: yes
+        owner: www-data
+        group: www-data
+

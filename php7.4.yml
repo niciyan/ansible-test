@@ -1,0 +1,12 @@
+- name: be sure php-fpm is installed
+  apt: 
+    name: 
+    - php-fpm
+    - php-mysql
+    state: present
+  become: yes
+
+- name: be sure php-fpm is running and enabled
+  service: name=php7.4-fpm state=started enabled=yes
+  become: yes
+
